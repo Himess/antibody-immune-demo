@@ -1,0 +1,11 @@
+[profile.default]
+src = "src"
+out = "out"
+libs = []
+# The settings Acme Lend was deployed with on testnet: the same sources build the same runtime code.
+solc_version = "0.8.28"
+evm_version = "cancun"
+optimizer = true
+optimizer_runs = 200
+bytecode_hash = "none"
+cbor_metadata = false

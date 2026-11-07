@@ -1,0 +1,26 @@
+# Immune memory (docs/immune.md in the Antibody repository): every pull request re-runs the paid proofs of
+# this program that it can read against the contracts this repository builds.
+
+# Acme Lend's program on near-antibody (testnet): Sepolia, anchored at block 12063269.
+program = 5
+# Foundry's output directory.
+artifacts = "out"
+# Revealed sealed blobs, found by sha256. A blob is public once revealed; its content key is not.
+blobs = ".antibody/proofs"
+
+# Content keys published with a proof. Commit 13's key is published in the Antibody repository
+# (fixtures/zk/a/content_key.hex); the other paid proofs open through disclosure or the project key.
+[content_keys]
+13 = ".antibody/keys/13.hex"
+
+# Each contract this repository builds, the program target whose code it replaces (an implementation behind
+# its proxy), and its constructor arguments as deployed (a target's name stands for its address).
+[[contract]]
+contract = "AcmeLendFinal"
+target = "AcmeLendImpl"
+args = ["AcmeGuard", "acUSD", "acETH", "AcmePool", "2000000000000000000000"]
+
+[[contract]]
+contract = "AcmeVaultFixed"
+target = "AcmeVaultImpl"
+args = ["AcmeGuard", "acUSD", "AcmeLend", "AcmeTreasury", "0x071C02083Cc0B966aAAE9E330633d000bc24Ee9C"]

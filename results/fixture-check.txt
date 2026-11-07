@@ -1,0 +1,27 @@
+[main] AcmeLendImpl code 0x144069b903f9c72fbbab3d74d383bfcec406a9e01f5812867b293d80542581cd (round 2 fixture: same)
+[main] AcmeVaultImpl code 0x389bcf636e17b1ff840fe234a507aa5e5154073b459c343409023794d570553d (round 2 fixture: same)
+[main] A: Fixed [] None
+[main] B: Fixed [] None
+[main] C: Fixed [] None
+[main] D: Fixed [] None
+[main] E: StillBreaks ["share_price AcmeVault.withdraw(uint256)"] None
+[main] F: Fixed [] None
+[main] KNOWN: StillBreaks ["share_price AcmeVault.withdraw(uint256)"] None
+[red] AcmeLendImpl code 0x144069b903f9c72fbbab3d74d383bfcec406a9e01f5812867b293d80542581cd (round 2 fixture: same)
+[red] AcmeVaultImpl code 0xb7cc1385a5b27c93c4e4cfda786129880d874685a67b106d9b3972108da2964b (round 2 fixture: differs)
+[red] A: Fixed [] None
+[red] B: StillBreaks ["fees_to_treasury AcmeVault.sweepFees(address)"] None
+[red] C: Fixed [] None
+[red] D: Fixed [] None
+[red] E: StillBreaks ["share_price AcmeVault.withdraw(uint256)"] None
+[red] F: Fixed [] None
+[red] KNOWN: StillBreaks ["share_price AcmeVault.withdraw(uint256)"] None
+[green] AcmeLendImpl code 0x144069b903f9c72fbbab3d74d383bfcec406a9e01f5812867b293d80542581cd (round 2 fixture: same)
+[green] AcmeVaultImpl code 0x3b6ab1807b100e3d04cb2d9e9c4b2700f4e7fedac332ee5448c29dbaf64d6988 (round 2 fixture: differs)
+[green] A: Fixed [] None
+[green] B: Fixed [] None
+[green] C: Fixed [] None
+[green] D: Fixed [] None
+[green] E: StillBreaks ["share_price AcmeVault.withdraw(uint256)"] None
+[green] F: Fixed [] None
+[green] KNOWN: StillBreaks ["share_price AcmeVault.withdraw(uint256)"] None

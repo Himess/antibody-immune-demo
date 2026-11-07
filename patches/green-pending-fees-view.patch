@@ -1,0 +1,19 @@
+Branch `green/pending-fees-view`: a harmless change. It adds a view, `AcmeVaultFixed.pendingFees()`, so the
+vault's runtime code changes (a new function in its dispatcher) and every paid proof re-runs against the new
+code. Expected: the immune memory check passes (exit 0): every paid proof it can read breaks no rule.
+
+Apply: git checkout -b green/pending-fees-view && git apply patches/green-pending-fees-view.patch
+
+diff --git a/src/acme-fixes/AcmeFinalFix.sol b/src/acme-fixes/AcmeFinalFix.sol
+--- a/src/acme-fixes/AcmeFinalFix.sol
++++ b/src/acme-fixes/AcmeFinalFix.sol
+@@ -50,4 +50,9 @@
+         if (from != msg.sender) revert NotYourFunds();
+         return _deposit(from, from, assets);
+     }
++
++    /// @notice Fees accrued and not yet collected, for dashboards.
++    function pendingFees() external view returns (uint256) {
++        return accruedFees;
++    }
+ }

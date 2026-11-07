@@ -1,0 +1,21 @@
+Branch `red/unguarded-fee-sweep`: "let a keeper sweep the fees too". It drops the admin check from
+`AcmeVaultFixed.sweepFees`, which brings back planted bug #2 (bug B in the Antibody repository's docs),
+paid in commit 14. Expected: the immune memory check fails (exit 2), naming commit 14, rule
+`fees_to_treasury` (high), entry point `AcmeVault.sweepFees(address)`, once commit 14 is readable here
+(see README: it opens with program 5's disclosure, or with the project key after a release wrap).
+
+Apply: git checkout -b red/unguarded-fee-sweep && git apply patches/red-unguarded-fee-sweep.patch
+
+diff --git a/src/acme-fixes/AcmeFinalFix.sol b/src/acme-fixes/AcmeFinalFix.sol
+--- a/src/acme-fixes/AcmeFinalFix.sol
++++ b/src/acme-fixes/AcmeFinalFix.sol
+@@ -38,8 +38,8 @@
+         AcmeVault(guard_, acUSD_, lend_, treasury_, admin_)
+     {}
+
++    /// @notice Lets a keeper sweep the fees too, so the admin no longer has to.
+     function sweepFees(address to) external override {
+-        if (msg.sender != admin) revert NotAdmin();
+         uint256 amount = accruedFees;
+         accruedFees = 0;
+         if (!acUSD.transfer(to, amount)) revert TransferFailed();

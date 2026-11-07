@@ -1,0 +1,149 @@
+{
+  "anchor_block": 12063269,
+  "build": [
+    {
+      "address": "0x0a1811b3a36287727abc7065aacc8fc4547b2f98",
+      "code": "anchor",
+      "code_hash": "0xf45c264911a1eecaa48c7c7b191650c4b38d4cb1b04e3861b284d211c5686367",
+      "from": null,
+      "target": "AcmeGuard"
+    },
+    {
+      "address": "0xf4e8d84a44d5d901b322d82e60b1a6cdc7620955",
+      "code": "anchor",
+      "code_hash": "0x3afc4a0ac6cb2e7864dc0a31324dae2889b78d9f4bae5a8bddcd4158adf1c3ab",
+      "from": null,
+      "target": "acUSD"
+    },
+    {
+      "address": "0x4edd629802596011ab8d76d996ef35b419961c76",
+      "code": "anchor",
+      "code_hash": "0xbea2eab7997a15413a1e5f54c3c57369bf3e0aa935d477869ee18f38d8be57f0",
+      "from": null,
+      "target": "acETH"
+    },
+    {
+      "address": "0x0053fefbaab1d98b3cc6765f435dbb6f8682f245",
+      "code": "anchor",
+      "code_hash": "0xb1ecd0600348f3f1cf532e5ff1a4b1d976d0aa492e5a9d9ef1ea4882c17ae5c4",
+      "from": null,
+      "target": "AcmePool"
+    },
+    {
+      "address": "0xca1fafbcfc14d665d76045a018b215987f39f8a7",
+      "code": "anchor",
+      "code_hash": "0x2a09df94f5f2041dc6de562b1a2bb52a6429f165964cf0a369efb006513eee3b",
+      "from": null,
+      "target": "AcmeLend"
+    },
+    {
+      "address": "0x4c348e8758deea78df03d0c0b20c58d1148edc2c",
+      "code": "pull request",
+      "code_hash": "0x7deb43a5fd8a6aac5aee95c158e0e552f6e866407b3f4c62442b39c6c6092adb",
+      "from": "AcmeLendFinal (out/AcmeFinalFix.sol/AcmeLendFinal.json)",
+      "target": "AcmeLendImpl"
+    },
+    {
+      "address": "0x0433ceb84db807402de6642929ebf1450381cc46",
+      "code": "anchor",
+      "code_hash": "0x2a09df94f5f2041dc6de562b1a2bb52a6429f165964cf0a369efb006513eee3b",
+      "from": null,
+      "target": "AcmeVault"
+    },
+    {
+      "address": "0x0fd4fe9da00079c3f3a94be994482ab8eb8c44fa",
+      "code": "pull request",
+      "code_hash": "0xed2f383c71a2a4962b47be0d939e4ded61a71bc3315a85513fb0135548c40e1e",
+      "from": "AcmeVaultFixed (out/AcmeFinalFix.sol/AcmeVaultFixed.json)",
+      "target": "AcmeVaultImpl"
+    },
+    {
+      "address": "0x25d16d1c0c5b86b88adae16e5a526a5526dc0c97",
+      "code": "anchor",
+      "code_hash": "0xf9431cd77b16235470fe08f3ce041f6da901556130b38cc20ba616432b4e3ded",
+      "from": null,
+      "target": "AcmeTreasury"
+    }
+  ],
+  "chain_id": 11155111,
+  "contract": "bounty.antibody.testnet",
+  "exit_code": 0,
+  "manifest_sha256": "ca0026f4379de2a0584f3ad75dde969ab2919aca9c4650a0fb75c6a58758e679",
+  "name": "Acme Lend v1 — pre-launch (testnet)",
+  "network": "testnet",
+  "program": 5,
+  "program_key": "bounty.antibody.testnet/5",
+  "proofs": [
+    {
+      "broken": [],
+      "commit": 13,
+      "hunter": "agent-a.antibody.testnet",
+      "outcome": "fixed",
+      "paid": "0.1 wNEAR",
+      "paid_for": [
+        "solvency (critical)"
+      ],
+      "read_through": "published content key",
+      "reason": null,
+      "receipt_matches_the_tee": true,
+      "round": 0,
+      "state": "Done:Paid"
+    },
+    {
+      "broken": [],
+      "commit": 14,
+      "hunter": "agent-b.antibody.testnet",
+      "outcome": "sealed",
+      "paid": "0.03 wNEAR",
+      "paid_for": [
+        "fees_to_treasury (high)"
+      ],
+      "read_through": null,
+      "reason": "not disclosed, no published content key, and no project key here (a repository secret, never given to pull requests from forks)",
+      "receipt_matches_the_tee": null,
+      "round": 0,
+      "state": "Done:Paid"
+    },
+    {
+      "broken": [],
+      "commit": 18,
+      "hunter": "agent-f.antibody.testnet",
+      "outcome": "sealed",
+      "paid": "0.1 wNEAR",
+      "paid_for": [
+        "solvency (critical)"
+      ],
+      "read_through": null,
+      "reason": "not disclosed, no published content key, and no project key here (a repository secret, never given to pull requests from forks)",
+      "receipt_matches_the_tee": null,
+      "round": 0,
+      "state": "Done:Paid"
+    },
+    {
+      "broken": [],
+      "commit": 19,
+      "hunter": "agent-g.antibody.testnet",
+      "outcome": "sealed",
+      "paid": "0.01 wNEAR",
+      "paid_for": [],
+      "read_through": null,
+      "reason": "not disclosed, no published content key, and no project key here (a repository secret, never given to pull requests from forks)",
+      "receipt_matches_the_tee": null,
+      "round": 0,
+      "state": "Done:Paid"
+    }
+  ],
+  "rules_round": 2,
+  "schema": "antibody.immune.v1",
+  "strict": false,
+  "summary": {
+    "fixed": 1,
+    "inconclusive": 0,
+    "paid": 4,
+    "rerun": 1,
+    "sealed": 3,
+    "still_breaks": 0
+  },
+  "transactions_sent": 0,
+  "verifier": "The local verifier is antibody-verifier 0.1.0, the crate the TEE's pinned build (wasm sha256 ccc27f0ca60c…) is made from"
+}
