@@ -50,4 +50,9 @@ contract AcmeVaultFixed is AcmeVault {
         if (from != msg.sender) revert NotYourFunds();
         return _deposit(from, from, assets);
     }
+
+    /// @notice Fees accrued and not yet collected, for dashboards.
+    function pendingFees() external view returns (uint256) {
+        return accruedFees;
+    }
 }
