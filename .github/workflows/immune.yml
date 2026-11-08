@@ -17,24 +17,27 @@ permissions:
 
 jobs:
   immune:
+    # Green here means only that no readable proof breaks: sealed proofs are the enclave check's.
+    name: "runner: readable proofs only (sealed proofs: see enclave)"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # The action and the antibody binary it downloads are pinned to the same release.
-      - uses: Himess/antibody/.github/actions/immune-memory@v0.6.0
+      # The action is pinned by commit (the v0.6.1 tag's), and the binary it downloads to the same release.
+      - uses: Himess/antibody/.github/actions/immune-memory@48e5122a7253fbee6974246530b6cc0d66900862 # v0.6.1
         with:
-          version: v0.6.0
+          version: v0.6.1
           program: "5"
           # No key here: this job builds the pull request's code (a project key would belong in a job that runs none of it).
 
   round:          # the pull request's code is built here, with no secret
+    name: "round: propose this build (no verdict)"
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Himess/antibody/.github/actions/immune-memory@v0.6.0
+      - uses: Himess/antibody/.github/actions/immune-memory@48e5122a7253fbee6974246530b6cc0d66900862 # v0.6.1
         with:
-          version: v0.6.0
+          version: v0.6.1
           program: "12"
           manifest-out: round.json
           # This step only writes the round manifest; the enclave job gives the verdict.
@@ -46,6 +49,7 @@ jobs:
           if-no-files-found: error
 
   enclave:        # the scoped keys are here, and nothing from the pull request runs
+    name: "enclave: every paid proof (the verdict)"
     needs: round
     if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
@@ -57,9 +61,9 @@ jobs:
         with:
           name: round-manifest
           path: ${{ runner.temp }}/round   # its own folder: the action takes the manifest as one regular file
-      - uses: Himess/antibody/.github/actions/immune-enclave@v0.6.0
+      - uses: Himess/antibody/.github/actions/immune-enclave@48e5122a7253fbee6974246530b6cc0d66900862 # v0.6.1
         with:
-          version: v0.6.0
+          version: v0.6.1
           program: "12"
           manifest: ${{ runner.temp }}/round/round.json
           project-account: acme.antibody.testnet
@@ -68,6 +72,7 @@ jobs:
           bot-key: ${{ secrets.ANTIBODY_BOT_KEY }}
 
   enclave-fork:   # a fork's pull request gets no secret: a failing notice, not a skipped (green) check
+    name: "enclave: every paid proof (the verdict)"
     needs: round
     if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository
     runs-on: ubuntu-latest

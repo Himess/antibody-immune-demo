@@ -9,6 +9,10 @@ This repository is Acme Lend at that final fix, as it shipped on testnet: `AcmeL
 `AcmeVaultFixed` (`src/acme-fixes`) over the contracts they fix (`src/acme`), with the compiler settings it was
 deployed with. Its build reproduces the code the release permits installed, byte for byte.
 
+**Read the `enclave` check: it is the verdict.** It re-runs every paid proof, sealed ones included, inside the
+enclave. The runner check is green whenever no proof it can read breaks, and sealed proofs are not readable on
+a runner, so on the red pull request it stays green while `enclave` fails.
+
 Every pull request gets two checks (Antibody's
 [docs/immune.md](https://github.com/Himess/antibody/blob/main/docs/immune.md#re-runs-in-the-enclave)):
 
