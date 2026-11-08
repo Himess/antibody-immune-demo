@@ -55,7 +55,7 @@ breaks no rule on `main` and `green`.
 
 ## Publishing (waits for an OK)
 
-Release `v0.5.0` of `Himess/antibody` must be published first: it carries the action
+Release `v0.5.1` of `Himess/antibody` (or later) must be published first: it carries the action
 (`.github/actions/immune-memory`) and the `antibody` binaries the action checks and runs.
 
 ```
