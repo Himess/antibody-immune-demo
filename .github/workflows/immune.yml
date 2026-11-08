@@ -21,21 +21,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       # The action and the antibody binary it downloads are pinned to the same release.
-      - uses: Himess/antibody/.github/actions/immune-memory@v0.6.0-rc.2
+      - uses: Himess/antibody/.github/actions/immune-memory@v0.6.0
         with:
-          version: v0.6.0-rc.2
+          version: v0.6.0
           program: "5"
-          # Optional: reads paid findings wrapped to the project. GitHub never gives it to pull requests from forks.
-          project-key: ${{ secrets.ANTIBODY_PROJECT_KEY }}
+          # No key here: this job builds the pull request's code (a project key would belong in a job that runs none of it).
 
   round:          # the pull request's code is built here, with no secret
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Himess/antibody/.github/actions/immune-memory@v0.6.0-rc.2
+      - uses: Himess/antibody/.github/actions/immune-memory@v0.6.0
         with:
-          version: v0.6.0-rc.2
+          version: v0.6.0
           program: "12"
           manifest-out: round.json
           # This step only writes the round manifest; the enclave job gives the verdict.
@@ -57,12 +56,22 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: round-manifest
-      - uses: Himess/antibody/.github/actions/immune-enclave@v0.6.0-rc.2
+          path: ${{ runner.temp }}/round   # its own folder: the action takes the manifest as one regular file
+      - uses: Himess/antibody/.github/actions/immune-enclave@v0.6.0
         with:
-          version: v0.6.0-rc.2
+          version: v0.6.0
           program: "12"
-          manifest: round.json
+          manifest: ${{ runner.temp }}/round/round.json
           project-account: acme.antibody.testnet
           project-key: ${{ secrets.ANTIBODY_PROPOSE_KEY }}
           bot-account: keeper.antibody.testnet
           bot-key: ${{ secrets.ANTIBODY_BOT_KEY }}
+
+  enclave-fork:   # a fork's pull request gets no secret: a failing notice, not a skipped (green) check
+    needs: round
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "::error title=Antibody immune memory::not checked in the enclave: a pull request from a fork gets no secret. A maintainer re-runs the check from a branch of this repository."
+          exit 1
