@@ -12,9 +12,9 @@ deployed with. Its build reproduces the code the release permits installed, byte
 **Read the check named "enclave: every paid proof (the verdict)".** It re-runs every paid proof, sealed ones
 included, inside the enclave, and takes about 11 minutes, one pull request at a time. The check named "runner
 (advisory)" is green whenever no proof it can read breaks, and sealed proofs are not readable on a runner, so
-on the red pull request it stays green while the verdict fails. The latest runs (v0.6.1, 2026-11-09):
-[PR #2, red](https://github.com/Himess/antibody-immune-demo/actions/runs/42538787235) and
-[PR #1, green](https://github.com/Himess/antibody-immune-demo/actions/runs/42538785818).
+on the red pull request it stays green while the verdict fails. The latest runs (v0.6.2, 2026-11-09):
+[PR #2, red](https://github.com/Himess/antibody-immune-demo/actions/runs/42546035887) and
+[PR #1, green](https://github.com/Himess/antibody-immune-demo/actions/runs/42546034154).
 
 Every pull request gets two checks (Antibody's
 [docs/immune.md](https://github.com/Himess/antibody/blob/main/docs/immune.md#re-runs-in-the-enclave)):
