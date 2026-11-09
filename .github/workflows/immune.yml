@@ -72,7 +72,7 @@ jobs:
           bot-key: ${{ secrets.ANTIBODY_BOT_KEY }}
 
   enclave-fork:   # a fork's pull request gets no secret: a failing notice, not a skipped (green) check
-    name: "enclave: every paid proof (the verdict)"
+    name: "enclave, for a fork's pull request: not checked"
     needs: round
     if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository
     runs-on: ubuntu-latest
