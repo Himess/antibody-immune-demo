@@ -9,9 +9,23 @@ This repository is Acme Lend at that final fix, as it shipped on testnet: `AcmeL
 `AcmeVaultFixed` (`src/acme-fixes`) over the contracts they fix (`src/acme`), with the compiler settings it was
 deployed with. Its build reproduces the code the release permits installed, byte for byte.
 
-On every pull request, a GitHub Action re-runs each paid proof of program 5 that it can read against the
-pull request's build, with Antibody's verifier, locally, at the program's anchor, and fails the check if one
-still breaks a committed rule: the pull request would re-open a paid hole (Antibody's `docs/immune.md`).
+**Read the `enclave` check: it is the verdict.** It re-runs every paid proof, sealed ones included, inside the
+enclave. The runner check is green whenever no proof it can read breaks, and sealed proofs are not readable on
+a runner, so on the red pull request it stays green while `enclave` fails.
+
+Every pull request gets two checks (Antibody's
+[docs/immune.md](https://github.com/Himess/antibody/blob/main/docs/immune.md#re-runs-in-the-enclave)):
+
+- **`enclave`, in the enclave:** the pull request's build is proposed as the next round of **program 12**, a
+  program kept for these checks (Acme Lend at its own addresses, with paid proofs of its own). near-antibody
+  re-runs every paid proof, sealed or not, inside the enclave, each re-run attested on NEAR, and the check reads
+  which keys still break: red if one does. The job holds two scoped keys and runs none of the pull request's
+  code: the project's (`propose_round` and the manifest's upload) and a bot's (`open_round`, so the next pull
+  request finds the slot free).
+- **`immune`, on the runner:** each paid proof of **program 5** (the recorded run's program) that the check can
+  read is re-run by the local verifier against the pull request's build. It is the only check a pull request
+  from a fork gets, since a fork gets no secret; its `enclave` check then fails with "not checked in the
+  enclave".
 
 ## What is here
 
@@ -20,11 +34,11 @@ still breaks a committed rule: the pull request would re-open a paid hole (Antib
 | `.antibody/immune.toml` | The mapping: program 5, and the program target each contract builds (`AcmeLendFinal` replaces the `AcmeLendImpl` implementation, `AcmeVaultFixed` the `AcmeVaultImpl` one), with their constructor arguments as deployed |
 | `.antibody/proofs/` | The sealed blobs of the paid commits 13, 14, 18 and 19, public on chain since their reveal (read with read-only RPC calls) |
 | `.antibody/keys/13.hex` | Commit 13's content key, already published in the Antibody repository (`fixtures/zk/a`) |
-| `.github/workflows/immune.yml` | The check, on `pull_request` (never `pull_request_target`) |
+| `.github/workflows/immune.yml` | The two checks, on `pull_request` (never `pull_request_target`): `immune`, `round` (builds the pull request's round manifest, with no secret) and `enclave` |
 | `patches/` | Two pull requests, prepared as patches |
 | `results/` | The check run locally against each build (view calls and local verifier runs only) |
 
-## The paid proofs
+## The paid proofs of program 5 (the check on the runner)
 
 | Commit | Paid for | The bug (public in Antibody's docs) | Readable by the check today |
 |---|---|---|---|
@@ -41,10 +55,15 @@ wrap exists (`antibody program read --commit <id>`, one transaction each).
 
 ## Two pull requests
 
-| Branch | Patch | Change | Expected |
+| Branch | Change | `enclave` (program 12) | `immune` (program 5, on the runner) |
 |---|---|---|---|
-| `red/unguarded-fee-sweep` | `patches/red-unguarded-fee-sweep.patch` | Drops the admin check from `AcmeVaultFixed.sweepFees`: bug B comes back | **red** (exit 2), naming commit 14, rule `fees_to_treasury` (high), entry point `AcmeVault.sweepFees(address)`, once commit 14 is readable. Until then: green, with commit 14 listed as not re-run (exit 3 with `strict: true`) |
-| `green/pending-fees-view` | `patches/green-pending-fees-view.patch` | Adds a view, `AcmeVaultFixed.pendingFees()`: new runtime code, same behaviour | **green** (exit 0) |
+| `red/unguarded-fee-sweep` | Drops the admin check from `AcmeVaultFixed.sweepFees`: bug B comes back | **red**: the paid proof of bug B (commit 56) breaks `fees_to_treasury` (high) again | green until commit 14's proof is readable (disclosure); then red, naming the entry point |
+| `green/pending-fees-view` | Adds a view, `AcmeVaultFixed.pendingFees()`: new runtime code, same behaviour | **green**: every paid key fixed | green |
+
+Measured on testnet (2026-11-08), both pull requests checked at once: PR #2 took the slot (round 6, re-run
+133 breaks slot 1 again), PR #1 queued and its manifest was renumbered from round 6 to 7 (every re-run
+fixed). Every run and transaction:
+[docs/results/immune-demo-2026-11-08.json](https://github.com/Himess/antibody/blob/main/docs/results/immune-demo-2026-11-08.json).
 
 ## Local results
 
@@ -52,29 +71,3 @@ wrap exists (`antibody program read --commit <id>`, one transaction each).
 and Markdown report), and an offline check of the same three builds on Antibody's recorded fixture, where bug
 B's paid proof is public: it still breaks `fees_to_treasury` at `AcmeVault.sweepFees(address)` on `red`, and
 breaks no rule on `main` and `green`.
-
-## Publishing (waits for an OK)
-
-Release `v0.5.0` of `Himess/antibody` must be published first: it carries the action
-(`.github/actions/immune-memory`) and the `antibody` binaries the action checks and runs.
-
-```
-git init -b main && git add . && git commit -m "Acme Lend at its final fix, with immune memory on pull requests"
-gh repo create Himess/antibody-immune-demo --public --source . --push
-git checkout -b red/unguarded-fee-sweep main && git apply patches/red-unguarded-fee-sweep.patch
-git commit -am "Let a keeper sweep the fees too" && git push -u origin HEAD && gh pr create --fill
-git checkout -b green/pending-fees-view main && git apply patches/green-pending-fees-view.patch
-git commit -am "Add pendingFees(), for dashboards" && git push -u origin HEAD && gh pr create --fill
-```
-
-To make commits 14 and 18 readable (and the red pull request red), disclose their tags (and commit 13's), from
-an account with NEAR credit at near-antibody for the run, then relay the run's TDX quote (or let the T1
-relayer do it):
-
-```
-antibody --account <you>.testnet admin call --contract bounty.antibody.testnet --method request_disclosure --gas-tgas 200 \
-  --args '{"program_id":5,"tags":[{"round":0,"tag":"ae7e21c8af1b96023b13ae1daff4bcd1076b5b282e4f6ce6fb91e6fdae5f6de4"},{"round":0,"tag":"a74dddb61406f343a53af7298ef64be2f9334763dfcd23f17ca3b85547e53b8c"},{"round":0,"tag":"325703227266ea4d3828142c490819fbc957bef5065a5ce0daeb03ee75242199"}]}'
-antibody --account <you>.testnet tee confirm --run <its run id> --tx <its transaction> --tx-signer <you>.testnet
-```
-
-Then re-run the checks on both pull requests.
