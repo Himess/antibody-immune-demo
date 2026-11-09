@@ -9,20 +9,23 @@ This repository is Acme Lend at that final fix, as it shipped on testnet: `AcmeL
 `AcmeVaultFixed` (`src/acme-fixes`) over the contracts they fix (`src/acme`), with the compiler settings it was
 deployed with. Its build reproduces the code the release permits installed, byte for byte.
 
-**Read the `enclave` check: it is the verdict.** It re-runs every paid proof, sealed ones included, inside the
-enclave. The runner check is green whenever no proof it can read breaks, and sealed proofs are not readable on
-a runner, so on the red pull request it stays green while `enclave` fails.
+**Read the check named "enclave: every paid proof (the verdict)".** It re-runs every paid proof, sealed ones
+included, inside the enclave, and takes about 11 minutes, one pull request at a time. The check named "runner
+(advisory)" is green whenever no proof it can read breaks, and sealed proofs are not readable on a runner, so
+on the red pull request it stays green while the verdict fails. The latest runs (v0.6.1, 2026-11-09):
+[PR #2, red](https://github.com/Himess/antibody-immune-demo/actions/runs/42538787235) and
+[PR #1, green](https://github.com/Himess/antibody-immune-demo/actions/runs/42538785818).
 
 Every pull request gets two checks (Antibody's
 [docs/immune.md](https://github.com/Himess/antibody/blob/main/docs/immune.md#re-runs-in-the-enclave)):
 
-- **`enclave`, in the enclave:** the pull request's build is proposed as the next round of **program 12**, a
+- **`enclave` ("enclave: every paid proof (the verdict)"), in the enclave:** the pull request's build is proposed as the next round of **program 12**, a
   program kept for these checks (Acme Lend at its own addresses, with paid proofs of its own). near-antibody
   re-runs every paid proof, sealed or not, inside the enclave, each re-run attested on NEAR, and the check reads
   which keys still break: red if one does. The job holds two scoped keys and runs none of the pull request's
   code: the project's (`propose_round` and the manifest's upload) and a bot's (`open_round`, so the next pull
   request finds the slot free).
-- **`immune`, on the runner:** each paid proof of **program 5** (the recorded run's program) that the check can
+- **`immune` ("runner (advisory)"), on the runner:** each paid proof of **program 5** (the recorded run's program) that the check can
   read is re-run by the local verifier against the pull request's build. It is the only check a pull request
   from a fork gets, since a fork gets no secret; its `enclave` check then fails with "not checked in the
   enclave".

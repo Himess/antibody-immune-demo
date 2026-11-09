@@ -18,14 +18,14 @@ permissions:
 jobs:
   immune:
     # Green here means only that no readable proof breaks: sealed proofs are the enclave check's.
-    name: "runner: readable proofs only (sealed proofs: see enclave)"
+    name: "runner (advisory): readable proofs only; sealed ones are the enclave check's"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # The action is pinned by commit (the v0.6.1 tag's), and the binary it downloads to the same release.
-      - uses: Himess/antibody/.github/actions/immune-memory@48e5122a7253fbee6974246530b6cc0d66900862 # v0.6.1
+      # The action is pinned by commit (the v0.6.2 tag's), and the binary it downloads to the same release.
+      - uses: Himess/antibody/.github/actions/immune-memory@f55104ab5d2219d5415e486501b122acefc496c1 # v0.6.2
         with:
-          version: v0.6.1
+          version: v0.6.2
           program: "5"
           # No key here: this job builds the pull request's code (a project key would belong in a job that runs none of it).
 
@@ -35,9 +35,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Himess/antibody/.github/actions/immune-memory@48e5122a7253fbee6974246530b6cc0d66900862 # v0.6.1
+      - uses: Himess/antibody/.github/actions/immune-memory@f55104ab5d2219d5415e486501b122acefc496c1 # v0.6.2
         with:
-          version: v0.6.1
+          version: v0.6.2
           program: "12"
           manifest-out: round.json
           # This step only writes the round manifest; the enclave job gives the verdict.
@@ -61,9 +61,9 @@ jobs:
         with:
           name: round-manifest
           path: ${{ runner.temp }}/round   # its own folder: the action takes the manifest as one regular file
-      - uses: Himess/antibody/.github/actions/immune-enclave@48e5122a7253fbee6974246530b6cc0d66900862 # v0.6.1
+      - uses: Himess/antibody/.github/actions/immune-enclave@f55104ab5d2219d5415e486501b122acefc496c1 # v0.6.2
         with:
-          version: v0.6.1
+          version: v0.6.2
           program: "12"
           manifest: ${{ runner.temp }}/round/round.json
           project-account: acme.antibody.testnet
