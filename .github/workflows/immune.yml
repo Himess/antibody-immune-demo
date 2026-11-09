@@ -22,10 +22,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # The action is pinned by commit (the v0.6.2 tag's), and the binary it downloads to the same release.
-      - uses: Himess/antibody/.github/actions/immune-memory@f55104ab5d2219d5415e486501b122acefc496c1 # v0.6.2
+      # The action is pinned by commit (the v0.6.3 tag's), and the binary it downloads to the same release.
+      - uses: Himess/antibody/.github/actions/immune-memory@6f5d1daa3f8b89ceadcbc08164e94ec32619114f # v0.6.3
         with:
-          version: v0.6.2
+          version: v0.6.3
           program: "5"
           # No key here: this job builds the pull request's code (a project key would belong in a job that runs none of it).
 
@@ -35,9 +35,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Himess/antibody/.github/actions/immune-memory@f55104ab5d2219d5415e486501b122acefc496c1 # v0.6.2
+      - uses: Himess/antibody/.github/actions/immune-memory@6f5d1daa3f8b89ceadcbc08164e94ec32619114f # v0.6.3
         with:
-          version: v0.6.2
+          version: v0.6.3
           program: "12"
           manifest-out: round.json
           # This step only writes the round manifest; the enclave job gives the verdict.
@@ -61,9 +61,9 @@ jobs:
         with:
           name: round-manifest
           path: ${{ runner.temp }}/round   # its own folder: the action takes the manifest as one regular file
-      - uses: Himess/antibody/.github/actions/immune-enclave@f55104ab5d2219d5415e486501b122acefc496c1 # v0.6.2
+      - uses: Himess/antibody/.github/actions/immune-enclave@6f5d1daa3f8b89ceadcbc08164e94ec32619114f # v0.6.3
         with:
-          version: v0.6.2
+          version: v0.6.3
           program: "12"
           manifest: ${{ runner.temp }}/round/round.json
           project-account: acme.antibody.testnet
