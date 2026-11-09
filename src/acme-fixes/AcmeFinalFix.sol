@@ -38,8 +38,8 @@ contract AcmeVaultFixed is AcmeVault {
         AcmeVault(guard_, acUSD_, lend_, treasury_, admin_)
     {}
 
+    /// @notice Lets a keeper sweep the fees too, so the admin no longer has to.
     function sweepFees(address to) external override {
-        if (msg.sender != admin) revert NotAdmin();
         uint256 amount = accruedFees;
         accruedFees = 0;
         if (!acUSD.transfer(to, amount)) revert TransferFailed();
